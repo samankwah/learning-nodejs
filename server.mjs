@@ -1,28 +1,33 @@
-import {createServer} from 'node:http';
-
-// Create HTTP Server
-const server = createServer(function(req, res) {
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.end('<h1>We have an HTTP Server</h1>');
-});
-
-// Listen for incoming requset 
-server.listen(3000, '127.0.0.1', function(){
-    console.log('Server is running');
-});
-
+import { createServer } from 'node:http';
+import { unlink, writeFile } from 'node:fs';
 
 //  Arrow function
-const handleRequest = () => {}
+function handleRequest() { }
 
 // Create HTTP Server
-const server = createServer ((req, res) => {
+const server = createServer((req, res) => {
     console.log(req.url);
-    res.writeHead(200, {'Content-Type': 'text/html'});
-    res.end('<h1>We have an HTTP Server</h1>');
+    if (req.url.includes('create')) {
+        // Create File
+        writeFile('./index.html', '<h1>Learning Node.js</h1>', () => {
+        // console.log(err)
+        // Return response
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end('<h1>File added</h1>');
+    });
+    } else {
+        // Delete filec
+        unlink('./index.html', () => {
+            // console.log(err)
+            // Return response
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end('<h1>File deleted</h1>');
+        });
+    }
 });
 
 // Listen for incoming requset 
 server.listen(3000, '127.0.0.1', () => {
     console.log('Server is running');
 });
+
